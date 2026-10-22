@@ -317,22 +317,22 @@ class PromptApplication( LifecycleLogged, IApplication ):
     """Orchestrates the two-phase run. Depends only on interfaces (DIP)."""
 
     def __init__( self,
-                  argument_parser: IArgumentParser,
-                  prompt_resolver: IPromptResolver,
-                  config_loader: IConfigLoader,
-                  session_factory: ISessionFactory,
-                  phase_executor: IPhaseExecutor,
-                  logger: ILifecycleLog ):
+                  argument_parser:  IArgumentParser,
+                  prompt_resolver:  IPromptResolver,
+                  config_loader:    IConfigLoader,
+                  session_factory:  ISessionFactory,
+                  phase_executor:   IPhaseExecutor,
+                  logger:           ILifecycleLog ):
         LifecycleLogged.__init__( self, logger )
-        self._argument_parser = argument_parser
-        self._prompt_resolver = prompt_resolver
-        self._config_loader = config_loader
-        self._session_factory = session_factory
-        self._phase_executor = phase_executor
+        self._argument_parser   = argument_parser
+        self._prompt_resolver   = prompt_resolver
+        self._config_loader     = config_loader
+        self._session_factory   = session_factory
+        self._phase_executor    = phase_executor
 
     def run( self, argv: list[ str ]) -> int:
         request = self._argument_parser.parse( argv )
-        prompt = self._prompt_resolver.resolve( request.prompt )
+        prompt  = self._prompt_resolver.resolve( request.prompt )
 
         cfg = self._config_loader.load( request.config )
         self._config_loader.validate( cfg, [ request.agent ])
@@ -350,13 +350,12 @@ def build_application() -> IApplication:
     """Wire the concrete adapters into the application. The one spot that may."""
     bootstrap_log: ILifecycleLog = PrintLifecycleLog()
     return PromptApplication(
-        argument_parser=ArgparseArgumentParser( __doc__, bootstrap_log ),
-        prompt_resolver=FileOrInlinePromptResolver( bootstrap_log ),
-        config_loader=SssfConfigLoader( bootstrap_log ),
-        session_factory=SessionRunFactory( bootstrap_log ),
-        phase_executor=ManualContextPhaseExecutor( bootstrap_log ),
-        logger=bootstrap_log,
-    )
+        argument_parser =   ArgparseArgumentParser(     __doc__, bootstrap_log  ),
+        prompt_resolver =   FileOrInlinePromptResolver( bootstrap_log           ),
+        config_loader   =   SssfConfigLoader(           bootstrap_log           ),
+        session_factory =   SessionRunFactory(          bootstrap_log           ),
+        phase_executor  =   ManualContextPhaseExecutor( bootstrap_log           ),
+        logger          =   bootstrap_log,                                      )
 
 
 if __name__ == "__main__":
