@@ -138,10 +138,10 @@ class PrintLifecycleLog( ILifecycleLog ):
     """
 
     def created( self, obj: object ) -> None:
-        print( f"[lifecycle] + { type( obj ).__name__ } #{ id( obj ):x }" )
+        print( f"[lifecycle] + { type( obj ).__name__ } #{ id( obj ):x}" )
 
     def destroyed( self, obj: object ) -> None:
-        print( f"[lifecycle] - { type( obj ).__name__ } #{ id( obj ):x }" )
+        print( f"[lifecycle] - { type( obj ).__name__ } #{ id( obj ):x}" )
 
 
 class ConsoleLifecycleLog( ILifecycleLog ):
@@ -154,10 +154,10 @@ class ConsoleLifecycleLog( ILifecycleLog ):
         self._run = run
 
     def created( self, obj: object ) -> None:
-        self._run.console.note( f"constructed { type( obj ).__name__ } #{ id( obj ):x }" )
+        self._run.console.note( f"constructed { type( obj ).__name__ } #{ id( obj ):x}" )
 
     def destroyed( self, obj: object ) -> None:
-        self._run.console.note( f"destroyed { type( obj ).__name__ } #{ id( obj ):x }" )
+        self._run.console.note( f"destroyed { type( obj ).__name__ } #{ id( obj ):x}" )
 
 
 class LifecycleLogged:
@@ -331,13 +331,12 @@ class PromptApplication( LifecycleLogged, IApplication ):
         self._phase_executor    = phase_executor
 
     def run( self, argv: list[ str ]) -> int:
-        request = self._argument_parser.parse( argv )
-        prompt  = self._prompt_resolver.resolve( request.prompt )
-
-        cfg = self._config_loader.load( request.config )
-        self._config_loader.validate( cfg, [ request.agent ])
-        run = self._session_factory.create( cfg, request.adw_id )
-
+        request = self._argument_parser.parse(      argv                  )
+        prompt  = self._prompt_resolver.resolve(    request.prompt        )
+        cfg     = self._config_loader.load(         request.config        )
+        self._config_loader.validate(               cfg, [ request.agent ])
+        run = self._session_factory.create(         cfg, request.adw_id   )
+        
         session_log: ILifecycleLog = ConsoleLifecycleLog( run )
 
         self._phase_executor.execute( run, RequestCapturePhase( run.engineer, prompt, session_log ))
@@ -355,7 +354,7 @@ def build_application() -> IApplication:
         config_loader   =   SssfConfigLoader(           bootstrap_log           ),
         session_factory =   SessionRunFactory(          bootstrap_log           ),
         phase_executor  =   ManualContextPhaseExecutor( bootstrap_log           ),
-        logger          =   bootstrap_log,                                      )
+        logger          =                               bootstrap_log,          )
 
 
 if __name__ == "__main__":
